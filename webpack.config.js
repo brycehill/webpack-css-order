@@ -1,6 +1,9 @@
 const path = require("path");
 const autoprefixer = require("autoprefixer");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 const production = process.env.NODE_ENV === "production";
 
@@ -9,21 +12,19 @@ const cssLoaders = [
     loader: "css-loader",
     options: {
       modules: true,
-      localIdentName: "[name]_[local]",
-      minimize: production ? { discardComments: { removeAll: true } } : false
+      localIdentName: "[name]_[local]"
     }
+  },
+
+  {
+    loader: "resolve-url-loader"
   },
 
   {
     loader: "postcss-loader",
     options: {
       sourceMap: true,
-      plugins: () => [
-        // Need to support old version of webkit in PhantomJS
-        autoprefixer({
-          browsers: ["last 2 versions", "Chrome 28"]
-        })
-      ]
+      plugins: () => [autoprefixer({ browsers: ["last 2 versions"] })]
     }
   },
   {
@@ -64,7 +65,21 @@ module.exports = {
       }
     ]
   },
+  optimization: {
+    minimizer: [
+      new UglifyJsPlugin({
+        cache: true,
+        parallel: true,
+        sourceMap: true
+      }),
+      new OptimizeCSSAssetsPlugin()
+    ]
+  },
   plugins: [
+    new HtmlWebpackPlugin({
+      template: "./src/index.html"
+    }),
+
     new MiniCssExtractPlugin({
       // Options similar to the same options in webpackOptions.output
       // both options are optional
