@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { util } from "./lib";
-import ComponentOne from "./ui/ComponentOne/ComponentOne";
+import { ComponentA } from "./ui/ComponentA";
 
-console.log(util("hi"));
-ReactDOM.render(<ComponentOne />, document.querySelector("#root"));
+const App = () => <ComponentA />;
+
+ReactDOM.render(<App />, document.querySelector("#root"));
