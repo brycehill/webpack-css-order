@@ -21,6 +21,10 @@ module.exports = () => {
           {
             test: /\.css$/,
             use: [
+              // MiniCssExtractPlugin is not necessary to replicate this issue.
+              // I added it as it is easier to view the order of the generated CSS.
+              // However, you can still see the issue by searching for the generated
+              // class names in the .js bundle. They're still out of order.
               MiniCssExtractPlugin.loader,
               {
                 loader: "css-loader",
@@ -32,6 +36,9 @@ module.exports = () => {
             ]
           }
         ]
+      },
+      optimization: {
+        minimize: false
       },
       plugins: [
         new MiniCssExtractPlugin({
